@@ -22,7 +22,14 @@ const ProductSchema = mongoose.Schema(
 
         img: {
             type: String,
-            required: true,
-        }
+            required: false,
+        },
+    },
+    {
+        timestamps: true
     }
-    );
+);
+
+    const Product = mongoose.model("Product", ProductSchema);
+
+    module.exports = Product;
