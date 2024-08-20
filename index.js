@@ -12,8 +12,11 @@ app.get('/',(req, res)=>{
     res.send("Hello from Node API Server nodemon is the captain");
 });
 
+//make the API of the Product
+
 
 app.post('/api/products', async (req, res) => {
+    
     try{
         const product = await Product.create(req.body);
         res.status(200).json(product);
