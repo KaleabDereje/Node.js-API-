@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Product = require('./models/product.model');
+const productRoute = require('./routes/product.route')
 
 const app = express();
 
@@ -12,13 +13,35 @@ app.get('/',(req, res)=>{
     res.send("Hello from Node API Server nodemon is the captain");
 });
 
+//ause the route
+app.use('/api/products/', productRoute);
 
 //make the API to view Products
 app.get('/api/products', async (req, res) => {
 
-    try {
-        const products = await Product.find({});
-        res.status(200).json(products);
+});
+
+
+//retrieve the products by their id
+app.get('/api/products/:id', async (req, res) =>{
+    
+});
+
+
+//update a product
+app.put('/api/products/:id', async (req, res) => {
+
+    try{
+        const { id } = req.params;
+        const product =  await Product.findByIdAndUpdate(id, req.body);
+
+        if(!product) {
+            return res.status(404).json({message: "Product not found"});
+        }
+
+        const updatedProduct = Product.findById(id);
+        res.status(200).json(updatedProduct);
+
     }
     catch (error) {
         res.status(500).json({message: error.message});
@@ -26,15 +49,20 @@ app.get('/api/products', async (req, res) => {
 });
 
 
-//retrieve the products by their id
-app.get('/api/products/:id', async (req, res) =>{
+//delete a product 
+app.delete('/api/products/:id', async (req, res) =>{
 
     try{
         const { id } = req.params;
-        const product = await Product.findById(id);
-        res.status(200).json(product);
+        const product = await Product.findByIdAndDelete(id);
+        
+        if(!product) {
+            return res.status(404).json({message: "Product not found"});
+        }
+
+        res.status(200).json({messsage: "Product Deleted"});
     }
-    catch (error) {
+    catch(error) {
         res.status(500).json({message: error.message});
     }
 });
